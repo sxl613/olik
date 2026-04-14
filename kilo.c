@@ -11,9 +11,10 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 struct editorConfig {
-  struct termios orig_termios;
+  int cx, cy;
   int screenrows;
   int screencols;
+  struct termios orig_termios;
 };
 
 struct editorConfig E;
@@ -127,14 +128,17 @@ void editorDrawRows(struct abuf *ab) {
   for (y = 0; y < E.screenrows; y++) {
     if (y == E.screenrows / 3) {
       char welcome[80];
-      int welcomelen = snprintf(welcome, sizeof(welcome), "OLIK editor -- version %s", OLIK_VERSION);
-      if (welcomelen > E.screencols) welcomelen = E.screencols;
+      int welcomelen = snprintf(welcome, sizeof(welcome),
+                                "OLIK editor -- version %s", OLIK_VERSION);
+      if (welcomelen > E.screencols)
+        welcomelen = E.screencols;
       int padding = (E.screencols - welcomelen) / 2;
       if (padding) {
         abAppend(ab, "~", 1);
         padding--;
       }
-      while (padding--) abAppend(ab, " ", 1);
+      while (padding--)
+        abAppend(ab, " ", 1);
       abAppend(ab, welcome, welcomelen);
     } else {
 
@@ -151,9 +155,16 @@ void editorDrawRows(struct abuf *ab) {
 
 void editorRefreshScreen() {
   struct abuf ab = ABUF_INIT;
+
   abAppend(&ab, "\x1b[?25l", 6);
   abAppend(&ab, "\x1b[H", 3);
+
   editorDrawRows(&ab);
+
+  char buf[32];
+  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy + 1, E.cx + 1);
+  abAppend(&ab, buf, strlen(buf));
+
   abAppend(&ab, "\x1b[H", 3);
   abAppend(&ab, "\x1b[?25h", 6);
 
@@ -162,6 +173,8 @@ void editorRefreshScreen() {
 }
 
 void initEditor() {
+  E.cx = 0;
+  E.cy = 0;
   if (getWindowSize(&E.screenrows, &E.screencols) == -1)
     die("getWindowSize");
 }

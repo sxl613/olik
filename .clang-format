@@ -1,0 +1,35 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Braces on same line (K&R style)
+BreakBeforeBraces: Linux
+
+# Short functions/ifs stay on one line
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+
+# Pointer alignment: "char *p" not "char* p"
+PointerAlignment: Right
+
+ColumnLimit: 100
+
+# Don't align assignments into columns
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+
+# Spaces
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInCStyleCastParentheses: false
+
+# Keep else on same line as closing brace
+# (handled by Linux brace style above)
+
+# Don't sort includes
+SortIncludes: Never
+
+# No space before trailing comments, single space after //
+SpacesBeforeTrailingComments: 1
